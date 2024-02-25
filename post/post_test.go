@@ -23,15 +23,14 @@ func TestRenderHTML(t *testing.T) {
 
 	a.Equal("My first post", p.Headers.Title)
 	a.Equal([]string{"first", "post"}, p.Headers.Tags)
-	a.Equal("example.gpx", p.Headers.Gpx)
-	a.Equal("example.jpg", p.Headers.OpenGraph.Image)
-	a.Equal("This is the opengraph description", p.Headers.OpenGraph.Description)
-	a.Equal("This is the description", p.Headers.Description)
+	a.Equal([]string{"example.gpx"}, p.Headers.Gpx)
+	a.Equal("example.jpg", *p.Headers.OpenGraph.Image)
+	a.Equal("This is the opengraph description", *p.Headers.OpenGraph.Description)
 	a.Equal("example.jpg", p.Headers.Gallery[0].Image)
 	a.Equal("example-thumb.jpg", p.Headers.Gallery[0].Thumbnail)
-	a.Equal("This is the alt", p.Headers.Gallery[0].Alt)
+	a.Equal("This is the image description", p.Headers.Gallery[0].Description)
 
 	a.Equal(template.HTML("<p>This is my first post</p>\n"), p.HTML)
 
-	a.Equal("example.md", p.FileName)
+	a.Equal("example", p.ID)
 }

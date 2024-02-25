@@ -1,8 +1,114 @@
-<html>
+
+<!DOCTYPE html>
+
+<html lang="it">
+
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="description" content="{{ .Post.Headers.OpenGraph.Description }}" />
+  <title>
+     {{ .Post.Headers.Title }} | I Giretti di Alessandro
+  </title>
+
+  <link href="/media/site-screen.css" type="text/css" rel="stylesheet" media="screen" />
+  <link href="/media/dracula.css" type="text/css" rel="stylesheet" media="screen" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/gpxparser@3.0.8/dist/GPXParser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@lychee-org/leaflet.photo@1.0.0/Leaflet.Photo.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@lychee-org/leaflet.photo@1.0.0/Leaflet.Photo.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.css" />
+  <script src="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.umd.js"></script>
+  <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+  <script src="/media/js/post_draw_map.js"></script>
+  <script src="/media/js/post_add_gallery_to_map.js"></script>
+
+  <!-- OpenGraph Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content=" {{ .Post.Headers.Title }} | I Giretti di Alessandro">
+  {{- if .Post.Headers.OpenGraph.Description }}
+  <meta property="og:description" content="{{ .Post.Headers.OpenGraph.Description }}">
+  {{- end }}
+  {{- if .Post.Headers.OpenGraph.Image }}
+  <meta property="og:image" content="{{ .Post.Headers.OpenGraph.Image }}">
+  {{- end }}
+  <!-- End OpenGraph Meta Tags -->
 </head>
+
 <body>
-    <h1>{{ .Headers.Title }}</h1>
-{{ .HTML  }}
+
+  <div class="head">
+    <a href="/">I Giretti di Alessandro</a>
+  </div>
+  <div class="mainbody">
+
+    <h1>{{ .Post.Headers.Title }}</h1>
+    
+    <div id="map" style="width: 100%; height: 50em"></div>
+    <script>
+      {{ range .Post.Headers.Gpx }}
+        map = post_draw_map('{{ . }}');
+      {{ end }}
+    </script>
+    <p>
+      Start Time: <span id="gpx_start_time"></span><br />
+      End Time: <span id="gpx_end_time"></span><br />
+      Distance: <span id="gpx_distance"></span><br />
+      Elevation Gain: <span id="gpx_elevation_gain"></span><br />
+      Elevation Loss: <span id="gpx_elevation_loss"></span><br />
+      Toal Time: <span id="gpx_total_time"></span><br />
+    </p>
+    
+
+    <div class="postcontent">
+</div>
+
+    
+    <h2>Gallery</h2>
+    <div class="gallery">
+      {{ range .Post.Headers.Gallery }}
+      <a data-fslightbox href="{{ .Image }}">
+        <img 
+          src="{{ .Thumbnail }}"
+          id="/media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08168_thumb.JPG"
+          alt="{{ .Description }}"
+          style="width: 150px; height: 150px; object-fit: cover;"
+        />
+      </a>
+      {{ end }}
+    </div>
+
+    
+    <script>
+      addGalleryToMap('/media/post/2024-02-17-valico-pizzelle-da-brinzio/track.gpx', '[{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08168.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08168_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08171.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08171_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08174.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08174_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08175.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08175_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08180.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08180_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/IMG_20240217_154841_HDR.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/IMG_20240217_154841_HDR_thumb.JPG"}]');
+    </script>
+    
+
+    
+
+    
+    <div class="postedby">
+      Posted by Alessandro Lorenzi on 17 Feb 2024
+    </div>
+    
+  </div>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.0.9/index.min.js"
+    integrity="sha512-03Ucfdj4I8Afv+9P/c9zkF4sBBGlf68zzr/MV+ClrqVCBXWAsTEjIoGCMqxhUxv1DGivK7Bm1IQd8iC4v7X2bw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
 </body>
+
 </html>

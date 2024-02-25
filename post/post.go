@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/adrg/frontmatter"
 	"github.com/gomarkdown/markdown"
@@ -12,23 +13,22 @@ import (
 type PostHeaders struct {
 	Title     string   `yaml:"title"`
 	Tags      []string `yaml:"tags"`
-	Gpx       string   `yaml:"gpx"`
+	Gpx       []string `yaml:"gpx"`
 	OpenGraph struct {
-		Image       string `yaml:"image"`
-		Description string `yaml:"description"`
+		Image       *string `yaml:"image"`
+		Description *string `yaml:"description"`
 	} `yaml:"open_graph"`
-	Description string `yaml:"description"`
-	Gallery     []struct {
-		Image     string `yaml:"image"`
-		Thumbnail string `yaml:"thumbnail"`
-		Alt       string `yaml:"alt"`
+	Gallery []struct {
+		Image       string `yaml:"image"`
+		Thumbnail   string `yaml:"thumbnail"`
+		Description string `yaml:"description"`
 	} `yaml:"gallery"`
 }
 
 type Post struct {
-	FileName string
-	Headers  *PostHeaders
-	HTML     template.HTML
+	ID      string
+	Headers *PostHeaders
+	HTML    template.HTML
 }
 
 // Open a file and return rendered html as a string
@@ -47,12 +47,15 @@ func ReadPost(path string) (*Post, error) {
 
 	html := markdown.ToHTML(rest, nil, nil)
 
-	filename := filepath.Base(path)
+	id := strings.TrimSuffix(
+		filepath.Base(path),
+		filepath.Ext(path),
+	)
 
 	p := &Post{
-		FileName: filename,
-		Headers:  &headers,
-		HTML:     template.HTML(string(html)),
+		ID:      id,
+		Headers: &headers,
+		HTML:    template.HTML(string(html)),
 	}
 
 	return p, nil
