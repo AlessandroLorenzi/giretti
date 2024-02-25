@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"giretti/post"
-	"net/http"
+	"giretti/views"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,21 +16,6 @@ func main() {
 
 	r.StaticFS("/media", gin.Dir(baseDir+"/media", false))
 
-	r.GET("/", func(c *gin.Context) {
-		p, err := post.ReadPost("./post/example.md")
-		if err != nil {
-			c.JSON(500, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-
-		Info := struct {
-			Post *post.Post
-		}{
-			Post: p,
-		}
-		c.HTML(http.StatusOK, "post.tmpl", Info)
-	})
+	r.GET("/:year/:month/:day/:title", views.GetPost)
 	r.Run()
 }
