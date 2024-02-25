@@ -7,11 +7,19 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Config struct {
+var Config *ConfigStruct
+
+type ConfigStruct struct {
 	Title string `yaml:"title"`
 }
 
-func ParseConfig(filename string) (*Config, error) {
+func Init(filename string) error {
+	var err error
+	Config, err = ParseConfig(filename)
+	return err
+}
+
+func ParseConfig(filename string) (*ConfigStruct, error) {
 	// Read the YAML file
 	data, err := os.ReadFile(filename)
 	if err != nil {
@@ -19,7 +27,7 @@ func ParseConfig(filename string) (*Config, error) {
 		return nil, err
 	}
 
-	var config Config
+	var config ConfigStruct
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		log.Fatalf("Failed to unmarshal config data: %v", err)

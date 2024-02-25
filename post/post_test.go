@@ -4,6 +4,7 @@ import (
 	"giretti/post"
 	"html/template"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -18,7 +19,7 @@ func TestFinleNotFound(t *testing.T) {
 func TestRenderHTML(t *testing.T) {
 	a := assert.New(t)
 
-	p, err := post.ReadPost("../post/example.md")
+	p, err := post.ReadPost("../example_site/posts/2024-02-25-my-first-post.md")
 	a.NoError(err)
 
 	a.Equal("My first post", p.Headers.Title)
@@ -30,7 +31,13 @@ func TestRenderHTML(t *testing.T) {
 	a.Equal("example-thumb.jpg", p.Headers.Gallery[0].Thumbnail)
 	a.Equal("This is the image description", p.Headers.Gallery[0].Description)
 
+	a.Equal(2024, p.Date.Year())
+	a.Equal(time.Month(2), p.Date.Month())
+	a.Equal(25, p.Date.Day())
+
+	a.Equal("/2024/02/25/my-first-post.html", p.Url)
+
 	a.Equal(template.HTML("<p>This is my first post</p>\n"), p.HTML)
 
-	a.Equal("example", p.ID)
+	a.Equal("2024-02-25-my-first-post", p.ID)
 }

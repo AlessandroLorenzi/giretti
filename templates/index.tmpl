@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="{{ .Config.Title }}" />
+
+  <title>
+     {{ .Config.Title }}
+  </title>
+  <link href="/media/site-screen.css" type="text/css" rel="stylesheet" media="screen" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="
+  https://cdn.jsdelivr.net/npm/gpxparser@3.0.8/dist/GPXParser.min.js
+  "></script>
+</head>
+
+<body>
+  <div class="head">
+    <a href="/">{{ .Config.Title }}</a>
+  </div>
+  <div id="map" style="width: 100%; height: 30em"></div>
+  <script>
+    var map = L.map('map');
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    var markersCoordinates = [];
+    async function addMarker(gpx_uri, post_title, post_url) {
+      var gpx = new gpxParser();
+      gpx_request = await fetch(gpx_uri);
+      gpx_content = await gpx_request.text();
+      gpx.parse(gpx_content);
+      marker_coordinates = [
+        gpx.tracks[0].points[0].lat,
+        gpx.tracks[0].points[0].lon
+      ];
+      marker = L.marker(marker_coordinates);
+      marker.bindPopup(`<a href='${post_url}'><strong>${post_title}</strong></a>`);
+      marker.addTo(map);
+      markersCoordinates = markersCoordinates.concat([marker_coordinates]);
+
+      map.fitBounds(markersCoordinates);
+    }
+    
+    addMarker('/media/post/2024-02-17-valico-pizzelle-da-brinzio/track.gpx', 'Valico Pizzelle da Brinzio', '/2024/02/17/valico-pizzelle-da-brinzio.html');
+    addMarker('/media/post/2024-01-29-monti-orsa-pravello-e-ceneri/track.gpx', 'Monti Orsa, Pravello e Ceneri', '/2024/01/29/monti-orsa-pravello-e-ceneri.html');
+    addMarker('/media/post/2024-01-21-intorno-alla-baita-di-orimento-con-la-neve/track.gpx', 'Intorno Alla Baita Di Orimento Con La Neve', '/2024/01/21/intorno-alla-baita-di-orimento-con-la-neve.html');
+    addMarker('/media/post/2023-09-03-da-civiglio-al-monte-boletto/2023-09-03_09_47_03.901_2023-09-03T09_47+02.gpx', 'Da Civiglio Al Monte Boletto', '/2023/09/03/da-civiglio-al-monte-boletto.html');
+
+  </script>
+
+  <div class="mainbody">
+    <div id="content">
+</div>
+    <ul>
+      
+      {{ range .Posts }}
+      <li>
+        {{ .Date.Format "02/01/2006" }} -
+        <a href="{{ .Url }}">{{ .Headers.Title }}</a>
+      </li>
+      {{ end }}
+      
+    </ul>
+  </div>
+</body>
+
+</html>

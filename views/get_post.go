@@ -3,35 +3,22 @@ package views
 import (
 	"giretti/config"
 	"giretti/post"
+	"giretti/posts"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Info struct {
-	Config *config.Config
+	Config *config.ConfigStruct
 	Post   *post.Post
 }
 
 func GetPost(c *gin.Context) {
-	post, err := post.ReadPost("./post/example.md")
-	if err != nil {
-		c.JSON(500, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	config, err := config.ParseConfig("./config/config.yaml")
-	if err != nil {
-		c.JSON(500, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	post := posts.GetFromUrl(c.Request.URL.Path)
 
 	i := Info{
-		Config: config,
+		Config: config.Config,
 		Post:   post,
 	}
 	c.HTML(http.StatusOK, "post.tmpl", i)

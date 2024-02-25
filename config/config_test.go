@@ -7,7 +7,7 @@ import (
 )
 
 func TestReadConfig(t *testing.T) {
-	config, err := ParseConfig("config.yaml")
+	config, err := ParseConfig("../example_site/config.yaml")
 
 	assert.NoError(t, err)
 
