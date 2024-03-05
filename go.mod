@@ -1,4 +1,4 @@
-module giretti
+module github.com/AlessandroLorenzi/giretti
 
 go 1.20
 

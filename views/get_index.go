@@ -9,17 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Info struct {
+type GetIndexInfo struct {
 	Config *config.ConfigStruct
-	Post   *post.Post
+	Posts  []*post.Post
 }
 
-func GetPost(c *gin.Context) {
-	post := posts.GetFromUrl(c.Request.URL.Path)
-
-	i := Info{
+func GetIndex(c *gin.Context) {
+	info := GetIndexInfo{
 		Config: config.Config,
-		Post:   post,
+		Posts:  posts.Posts,
 	}
-	c.HTML(http.StatusOK, "post.tmpl", i)
+	c.HTML(http.StatusOK, "index.tmpl", info)
 }
