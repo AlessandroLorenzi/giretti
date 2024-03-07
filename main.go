@@ -1,7 +1,9 @@
 package main
 
 import (
+	"embed"
 	"fmt"
+	"html/template"
 	"os"
 
 	"github.com/AlessandroLorenzi/giretti/config"
@@ -9,6 +11,9 @@ import (
 	"github.com/AlessandroLorenzi/giretti/views"
 	"github.com/gin-gonic/gin"
 )
+
+//go:embed templates/*
+var f embed.FS
 
 func main() {
 	fmt.Println("Giretti")
@@ -26,7 +31,10 @@ func main() {
 	}
 
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
+	templ := template.Must(
+		template.New("").ParseFS(f, "templates/*.tmpl"),
+	)
+	r.SetHTMLTemplate(templ)
 
 	r.StaticFS("/media", gin.Dir(baseDir+"/media", false))
 
