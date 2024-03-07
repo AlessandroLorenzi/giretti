@@ -10,7 +10,8 @@ import (
 var Config *ConfigStruct
 
 type ConfigStruct struct {
-	Title string `yaml:"title"`
+	Title  string `yaml:"title"`
+	Author string `yaml:"author"`
 }
 
 func Init(filename string) error {

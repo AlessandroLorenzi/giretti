@@ -17,9 +17,8 @@ type Info struct {
 func GetPost(c *gin.Context) {
 	post := posts.GetFromUrl(c.Request.URL.Path)
 
-	i := Info{
+	c.HTML(http.StatusOK, "post.tmpl", Info{
 		Config: config.Config,
 		Post:   post,
-	}
-	c.HTML(http.StatusOK, "post.tmpl", i)
+	})
 }

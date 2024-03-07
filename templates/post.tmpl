@@ -54,52 +54,45 @@
   <div class="mainbody">
 
     <h1>{{ .Post.Headers.Title }}</h1>
-    
-    <div id="map" style="width: 100%; height: 50em"></div>
-    <script>
-      {{ range .Post.Headers.Gpx }}
-        map = post_draw_map('{{ . }}');
-      {{ end }}
-    </script>
-    <p>
-      Start Time: <span id="gpx_start_time"></span><br />
-      End Time: <span id="gpx_end_time"></span><br />
-      Distance: <span id="gpx_distance"></span><br />
-      Elevation Gain: <span id="gpx_elevation_gain"></span><br />
-      Elevation Loss: <span id="gpx_elevation_loss"></span><br />
-      Toal Time: <span id="gpx_total_time"></span><br />
-    </p>
-    
+    {{ if gt (len .Post.Headers.Gpx) 0 }}
+      <div id="map" style="width: 100%; height: 50em"></div>
+      <script>
+        {{ range .Post.Headers.Gpx }}
+          map = post_draw_map('/{{ . }}');
+        {{ end }}
+      </script>
+      <p>
+        Start Time: <span id="gpx_start_time"></span><br />
+        End Time: <span id="gpx_end_time"></span><br />
+        Distance: <span id="gpx_distance"></span><br />
+        Elevation Gain: <span id="gpx_elevation_gain"></span><br />
+        Elevation Loss: <span id="gpx_elevation_loss"></span><br />
+        Toal Time: <span id="gpx_total_time"></span><br />
+      </p>
+    {{ end }}
 
     <div class="postcontent">
-</div>
+      {{ .Post.HTML }}
+    </div>
 
-    
+    {{ if gt (len .Post.Headers.Gallery) 0 }}
     <h2>Gallery</h2>
     <div class="gallery">
       {{ range .Post.Headers.Gallery }}
-      <a data-fslightbox href="{{ .Image }}">
+      <a data-fslightbox href="/{{ .Image }}">
         <img 
-          src="{{ .Thumbnail }}"
-          id="/media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08168_thumb.JPG"
+          src="/{{ .Thumbnail }}"
+          id="{{ .Thumbnail }}"
           alt="{{ .Description }}"
           style="width: 150px; height: 150px; object-fit: cover;"
         />
       </a>
       {{ end }}
     </div>
-
+    {{ end }}
     
-    <script>
-      addGalleryToMap('/media/post/2024-02-17-valico-pizzelle-da-brinzio/track.gpx', '[{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08168.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08168_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08171.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08171_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08174.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08174_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08175.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08175_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08180.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/DSC08180_thumb.JPG"},{"image":"media/post/2024-02-17-valico-pizzelle-da-brinzio/IMG_20240217_154841_HDR.JPG","thumbnail":"media/post/2024-02-17-valico-pizzelle-da-brinzio/IMG_20240217_154841_HDR_thumb.JPG"}]');
-    </script>
-    
-
-    
-
-    
-    <div class="postedby">
-      Posted by Alessandro Lorenzi on 17 Feb 2024
+    <div class="">
+      Posted by {{ .Config.Author }} on {{ .Post.Date.Format "02/01/2006" }}
     </div>
     
   </div>
@@ -107,7 +100,8 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.0.9/index.min.js"
     integrity="sha512-03Ucfdj4I8Afv+9P/c9zkF4sBBGlf68zzr/MV+ClrqVCBXWAsTEjIoGCMqxhUxv1DGivK7Bm1IQd8iC4v7X2bw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+  </script>
   
 </body>
 
