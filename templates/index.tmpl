@@ -49,11 +49,11 @@
       map.fitBounds(markersCoordinates);
     }
     
-    addMarker('/media/post/2024-02-17-valico-pizzelle-da-brinzio/track.gpx', 'Valico Pizzelle da Brinzio', '/2024/02/17/valico-pizzelle-da-brinzio.html');
-    addMarker('/media/post/2024-01-29-monti-orsa-pravello-e-ceneri/track.gpx', 'Monti Orsa, Pravello e Ceneri', '/2024/01/29/monti-orsa-pravello-e-ceneri.html');
-    addMarker('/media/post/2024-01-21-intorno-alla-baita-di-orimento-con-la-neve/track.gpx', 'Intorno Alla Baita Di Orimento Con La Neve', '/2024/01/21/intorno-alla-baita-di-orimento-con-la-neve.html');
-    addMarker('/media/post/2023-09-03-da-civiglio-al-monte-boletto/2023-09-03_09_47_03.901_2023-09-03T09_47+02.gpx', 'Da Civiglio Al Monte Boletto', '/2023/09/03/da-civiglio-al-monte-boletto.html');
-
+    {{ range .Posts }}
+    {{ if gt (len .Headers.Gpx) 0 }}
+    addMarker('{{ index .Headers.Gpx 0 }}', '{{ .Headers.Title }}', '{{ .Url }}');
+    {{ end }}
+    {{ end }}
   </script>
 
   <div class="mainbody">
