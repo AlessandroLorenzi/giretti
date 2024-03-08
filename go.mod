@@ -6,8 +6,10 @@ require (
 	github.com/adrg/frontmatter v0.2.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gomarkdown/markdown v0.0.0-20231222211730-1d6d20845b47
+	github.com/rwcarlsen/goexif v0.0.0-20190401172101-9e8deecbddbd
 	github.com/stretchr/testify v1.8.4
-	gopkg.in/yaml.v2 v2.3.0
+	github.com/tkrajina/gpxgo v1.3.1
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
