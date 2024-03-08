@@ -4,13 +4,13 @@ tags:
   - first
   - post
 gpx:
-  - example.gpx
+  - media/2024-02-25-my-first-post/track.gpx
 open_graph:
-  image: example.jpg
+  image: media/2024-02-25-my-first-post/example.jpg
   description: This is the opengraph description
 gallery:
-  - image: "example.jpg"
-    thumbnail: "example-thumb.jpg"
+  - image: "media/2024-02-25-my-first-post/example.jpg"
+    thumbnail: "media/2024-02-25-my-first-post/example_thumb.jpg"
     description: "This is the image description"
 ---
 
