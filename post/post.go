@@ -11,14 +11,16 @@ import (
 
 	"github.com/AlessandroLorenzi/giretti/position"
 	"github.com/adrg/frontmatter"
+	log "github.com/dsoprea/go-logging"
 	"github.com/gomarkdown/markdown"
 )
 
 type PostHeaders struct {
-	Title     string   `yaml:"title"`
-	Tags      []string `yaml:"tags"`
-	Gpx       []string `yaml:"gpx"`
-	OpenGraph struct {
+	Title            string             `yaml:"title"`
+	Tags             []string           `yaml:"tags"`
+	Gpx              []string           `yaml:"gpx"`
+	StartingPosition *position.Position `yaml:"starting_position"`
+	OpenGraph        struct {
 		Image       *string `yaml:"image"`
 		Description *string `yaml:"description"`
 	} `yaml:"open_graph"`
@@ -52,9 +54,12 @@ func ReadPost(path string) (*Post, error) {
 		return nil, err
 	}
 
-	err = enrichGallery(&headers)
-	if err != nil {
-		return nil, err
+	if err := enrichGallery(&headers); err != nil {
+		log.Errorf("Error enriching gallery: %v", err)
+	}
+
+	if err := setPosition(&headers); err != nil {
+		log.Errorf("Error setting position: %v", err)
 	}
 
 	html := markdown.ToHTML(rest, nil, nil)
@@ -132,4 +137,17 @@ func enrichGallery(headers *PostHeaders) error {
 		headers.Gallery[i].Position = p
 	}
 	return nil
+}
+
+func setPosition(headers *PostHeaders) error {
+	if headers.StartingPosition != nil || len(headers.Gpx) == 0 {
+		return nil
+	}
+	pat, err := position.GetPositionsFromGpx(headers.Gpx[0])
+	if err != nil {
+		return err
+	}
+	headers.StartingPosition = &pat[0].Position
+
+	return err
 }

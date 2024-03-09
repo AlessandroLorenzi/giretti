@@ -23,7 +23,7 @@ func init() {
 	}
 }
 
-func TestRenderHTML(t *testing.T) {
+func TestReadPost(t *testing.T) {
 	a := assert.New(t)
 
 	p, err := post.ReadPost("posts/2024-02-25-my-first-post.md")
@@ -51,4 +51,17 @@ func TestRenderHTML(t *testing.T) {
 	a.NotNil(p.Headers.Gallery[0].Position)
 	a.Equal(45.880487, p.Headers.Gallery[0].Position.Lat)
 	a.Equal(8.902816, p.Headers.Gallery[0].Position.Lon)
+
+	a.Equal(45.880394, p.Headers.StartingPosition.Lat)
+	a.Equal(8.903013, p.Headers.StartingPosition.Lon)
+}
+
+func TestPositionFromHeaders(t *testing.T) {
+	a := assert.New(t)
+
+	p, _ := post.ReadPost("posts/2024-03-05-second-post.md")
+
+	a.Equal(1.2, p.Headers.StartingPosition.Lat)
+	a.Equal(3.4, p.Headers.StartingPosition.Lon)
+
 }

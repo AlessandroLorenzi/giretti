@@ -15,7 +15,7 @@ type Position struct {
 }
 
 type positionAtTime struct {
-	position Position
+	Position Position
 	time     time.Time
 }
 
@@ -25,7 +25,7 @@ func GetImagePosition(path string, gpxPath string) (*Position, error) {
 		return nil, err
 	}
 
-	positions, err := getPositionsFromGpx(gpxPath)
+	positions, err := GetPositionsFromGpx(gpxPath)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func getShootingTime(path string) (*time.Time, error) {
 	return &shootingTime, nil
 }
 
-func getPositionsFromGpx(gpxPath string) ([]positionAtTime, error) {
+func GetPositionsFromGpx(gpxPath string) ([]positionAtTime, error) {
 	gpxFile, err := gpx.ParseFile(gpxPath)
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func getPositionsFromGpx(gpxPath string) ([]positionAtTime, error) {
 		for _, segment := range track.Segments {
 			for _, point := range segment.Points {
 				positions = append(positions, positionAtTime{
-					position: Position{
+					Position: Position{
 						Lat: point.Latitude,
 						Lon: point.Longitude,
 					},
@@ -73,12 +73,12 @@ func getPositionsFromGpx(gpxPath string) ([]positionAtTime, error) {
 }
 
 func getNearestPointInTime(positions []positionAtTime, time time.Time) *Position {
-	p := positions[0].position
+	p := positions[0].Position
 	shootingTimeDiff := time.Sub(positions[0].time)
 
 	for i := 0; i < len(positions)-1; i++ {
 		if shootingTimeDiff < positions[i+1].time.Sub(positions[i].time) {
-			p = positions[i].position
+			p = positions[i].Position
 			shootingTimeDiff = time.Sub(positions[i].time)
 		}
 	}
