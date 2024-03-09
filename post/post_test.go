@@ -2,6 +2,7 @@ package post_test
 
 import (
 	"html/template"
+	"os"
 	"testing"
 	"time"
 
@@ -15,20 +16,26 @@ func TestFinleNotFound(t *testing.T) {
 	_, err := post.ReadPost("notfound.md")
 	a.Error(err)
 }
+func init() {
+	err := os.Chdir("../example_site")
+	if err != nil {
+		panic(err)
+	}
+}
 
 func TestRenderHTML(t *testing.T) {
 	a := assert.New(t)
 
-	p, err := post.ReadPost("../example_site/posts/2024-02-25-my-first-post.md")
+	p, err := post.ReadPost("posts/2024-02-25-my-first-post.md")
 	a.NoError(err)
 
 	a.Equal("My first post", p.Headers.Title)
 	a.Equal([]string{"first", "post"}, p.Headers.Tags)
 	a.Equal([]string{"media/posts/2024-02-25-my-first-post/track.gpx"}, p.Headers.Gpx)
-	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957.jpg", *p.Headers.OpenGraph.Image)
+	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957.JPG", *p.Headers.OpenGraph.Image)
 	a.Equal("This is the opengraph description", *p.Headers.OpenGraph.Description)
-	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957.jpg", p.Headers.Gallery[0].Image)
-	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957_thumb.jpg", p.Headers.Gallery[0].Thumbnail)
+	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957.JPG", p.Headers.Gallery[0].Image)
+	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957_thumb.JPG", p.Headers.Gallery[0].Thumbnail)
 	a.Equal("This is the image description", p.Headers.Gallery[0].Description)
 
 	a.Equal(2024, p.Date.Year())
@@ -40,4 +47,8 @@ func TestRenderHTML(t *testing.T) {
 	a.Equal(template.HTML("<p>This is my first post</p>\n"), p.HTML)
 
 	a.Equal("2024-02-25-my-first-post", p.ID)
+
+	a.NotNil(p.Headers.Gallery[0].Position)
+	a.Equal(45.880487, p.Headers.Gallery[0].Position.Lat)
+	a.Equal(8.902816, p.Headers.Gallery[0].Position.Lon)
 }

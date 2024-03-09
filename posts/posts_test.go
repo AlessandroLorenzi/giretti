@@ -1,14 +1,21 @@
 package posts_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/AlessandroLorenzi/giretti/posts"
 	"github.com/stretchr/testify/assert"
 )
 
+func init() {
+	err := os.Chdir("../example_site")
+	if err != nil {
+		panic(err)
+	}
+}
 func TestPostsInit(t *testing.T) {
-	testDir := "../example_site/posts"
+	testDir := "posts"
 
 	a := assert.New(t)
 

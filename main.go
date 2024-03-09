@@ -18,14 +18,14 @@ var f embed.FS
 func main() {
 	fmt.Println("Giretti")
 
-	var baseDir = getBaseDirFromArgs()
+	os.Chdir(getBaseDirFromArgs())
 
-	if err := posts.Init(baseDir + "/posts"); err != nil {
+	if err := posts.Init("posts"); err != nil {
 		fmt.Println("Error initializing posts", err)
 		return
 	}
 
-	if err := config.Init(baseDir + "/config.yaml"); err != nil {
+	if err := config.Init("config.yaml"); err != nil {
 		fmt.Println("Error initializing config", err)
 		return
 	}
@@ -36,7 +36,7 @@ func main() {
 	)
 	r.SetHTMLTemplate(templ)
 
-	r.StaticFS("/media", gin.Dir(baseDir+"/media", false))
+	r.StaticFS("/media", gin.Dir("media", false))
 
 	r.GET("/", views.GetIndex)
 	r.GET("/:year/:month/:day/:title", views.GetPost)

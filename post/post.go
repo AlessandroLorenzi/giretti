@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/AlessandroLorenzi/giretti/position"
 	"github.com/adrg/frontmatter"
 	"github.com/gomarkdown/markdown"
 )
@@ -25,6 +26,7 @@ type PostHeaders struct {
 		Image       string `yaml:"image"`
 		Thumbnail   string `yaml:"thumbnail"`
 		Description string `yaml:"description"`
+		Position    *position.Position
 	} `yaml:"gallery"`
 }
 
@@ -46,6 +48,11 @@ func ReadPost(path string) (*Post, error) {
 	}
 
 	rest, err := frontmatter.Parse(input, &headers)
+	if err != nil {
+		return nil, err
+	}
+
+	err = enrichGallery(&headers)
 	if err != nil {
 		return nil, err
 	}
@@ -111,4 +118,18 @@ func getDateFromPath(path string) time.Time {
 
 	// Construct the time.Time value
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+}
+
+func enrichGallery(headers *PostHeaders) error {
+	if len(headers.Gallery) == 0 || len(headers.Gpx) == 0 {
+		return nil
+	}
+	for i := range headers.Gallery {
+		p, err := position.GetImagePosition(headers.Gallery[i].Image, headers.Gpx[0])
+		if err != nil {
+			return err
+		}
+		headers.Gallery[i].Position = p
+	}
+	return nil
 }
