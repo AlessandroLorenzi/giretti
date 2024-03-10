@@ -31,29 +31,20 @@
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    var markersCoordinates = [];
-    async function addMarker(gpx_uri, post_title, post_url) {
-      var gpx = new gpxParser();
-      gpx_request = await fetch(gpx_uri);
-      gpx_content = await gpx_request.text();
-      gpx.parse(gpx_content);
-      marker_coordinates = [
-        gpx.tracks[0].points[0].lat,
-        gpx.tracks[0].points[0].lon
-      ];
-      marker = L.marker(marker_coordinates);
-      marker.bindPopup(`<a href='${post_url}'><strong>${post_title}</strong></a>`);
-      marker.addTo(map);
-      markersCoordinates = markersCoordinates.concat([marker_coordinates]);
-
-      map.fitBounds(markersCoordinates);
-    }
-    
+    var markers = [];    
     {{ range .Posts }}
-    {{ if gt (len .Headers.Gpx) 0 }}
-    addMarker('{{ index .Headers.Gpx 0 }}', '{{ .Headers.Title }}', '{{ .Url }}');
-    {{ end }}
-    {{ end }}
+      {{- if .Headers.StartingPosition -}}
+        marker_coordinates = [
+          {{ .Headers.StartingPosition.Lat }},
+          {{ .Headers.StartingPosition.Lon }}
+        ];
+        marker = L.marker(marker_coordinates);
+        marker.bindPopup("<a href='{{ .Url }}'><strong>{{ .Headers.Title }}</strong></a>");
+        marker.addTo(map);
+        markers = markers.concat([marker_coordinates]);
+      {{- end -}}
+    {{- end -}}
+    map.fitBounds(markers);
   </script>
 
   <div class="mainbody">
