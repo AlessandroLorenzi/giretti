@@ -31,8 +31,6 @@
   <link rel="stylesheet" href="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.css" />
   <script src="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.umd.js"></script>
   <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
-  <script src="/media/js/post_draw_map.js"></script>
-  <script src="/media/js/post_add_gallery_to_map.js"></script>
 
   <!-- OpenGraph Meta Tags -->
   <meta property="og:type" content="website">
@@ -44,6 +42,43 @@
   <meta property="og:image" content="{{ .Post.Headers.OpenGraph.Image }}">
   {{- end }}
   <!-- End OpenGraph Meta Tags -->
+
+  <script>
+    function millisecondsToHoursMinutes(milliseconds) {
+        var totalMinutes = Math.floor(milliseconds / (1000 * 60));
+        var hours = Math.floor(totalMinutes / 60);
+        var minutes = totalMinutes % 60;
+        return hours + "h" + (minutes < 10 ? '0' : '') + minutes + "m";
+    }
+
+    function post_draw_map(gpx) {
+        var map = L.map('map', { maxZoom: 18 });
+        const mtLayer = L.maptilerLayer({
+            apiKey: 'kZXFdn8DpN7swtn4ysU0',
+            style: L.MaptilerStyle.OUTDOOR, // optional
+        }).addTo(map);
+
+        gpx_track = new L.GPX(gpx, {
+            async: true,
+            marker_options: {
+                startIconUrl: 'https://mpetazzoni.github.io/leaflet-gpx/pin-icon-start.png',
+                endIconUrl: 'https://mpetazzoni.github.io/leaflet-gpx/pin-icon-end.png',
+                shadowUrl: 'https://mpetazzoni.github.io/leaflet-gpx/pin-shadow.png'
+            }
+        }).on('loaded', function (e) {
+            map.fitBounds(e.target.getBounds());
+
+            document.getElementById('gpx_start_time').textContent = gpx_track.get_start_time().toLocaleString();
+            document.getElementById('gpx_end_time').textContent = gpx_track.get_end_time().toLocaleString();
+            document.getElementById('gpx_distance').textContent = (gpx_track.get_distance() / 1000).toFixed(2) + ' km';
+            document.getElementById('gpx_elevation_gain').textContent = gpx_track.get_elevation_gain().toFixed(0) + ' m';
+            document.getElementById('gpx_elevation_loss').textContent = gpx_track.get_elevation_loss().toFixed(0) + ' m';
+            document.getElementById('gpx_total_time').textContent = millisecondsToHoursMinutes(gpx_track.get_total_time());
+        }).addTo(map);
+
+        return map;
+    }
+  </script>
 </head>
 
 <body>
@@ -89,6 +124,22 @@
       </a>
       {{ end }}
     </div>
+    <script>
+    var photos = [];
+    {{ range $i, $_ := .Post.Headers.Gallery }}
+      photos.push({
+        url: '/{{ .Image }}',
+        thumbnail: '/{{ .Thumbnail }}',
+        index: {{ $i }},
+        lat: {{ .Position.Lat }},
+        lon: {{ .Position.Lon }},
+      });
+    {{ end }}
+    var photoLayer = L.photo.cluster({ spiderfyDistanceMultiplier: 1.2 }).on('click', function (evt) {
+                    fsLightbox.open(evt.layer.photo.index);
+                });;
+    photoLayer.add(photos).addTo(map);
+    </script>
     {{ end }}
     
     <div class="">
