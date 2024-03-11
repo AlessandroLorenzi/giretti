@@ -29,7 +29,6 @@ func GetImagePosition(path string, gpxPath string) (*Position, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return getNearestPointInTime(positions, *shootingTime), nil
 }
 
@@ -72,16 +71,14 @@ func GetPositionsFromGpx(gpxPath string) ([]positionAtTime, error) {
 	return positions, nil
 }
 
-func getNearestPointInTime(positions []positionAtTime, time time.Time) *Position {
+func getNearestPointInTime(positions []positionAtTime, shootingTime time.Time) *Position {
 	p := positions[0].Position
-	shootingTimeDiff := time.Sub(positions[0].time)
-
+	shootingTimeDiff := shootingTime.Sub(positions[0].time).Abs()
 	for i := 0; i < len(positions)-1; i++ {
-		if shootingTimeDiff < positions[i+1].time.Sub(positions[i].time) {
+		if shootingTimeDiff > shootingTime.Sub(positions[i].time).Abs() {
 			p = positions[i].Position
-			shootingTimeDiff = time.Sub(positions[i].time)
+			shootingTimeDiff = shootingTime.Sub(positions[i].time).Abs()
 		}
 	}
-
 	return &p
 }

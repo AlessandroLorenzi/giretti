@@ -16,6 +16,6 @@ func TestGetImagePosition(t *testing.T) {
 
 	a.Nil(err)
 
-	assert.Equal(t, 45.880487, p.Lat)
-	assert.Equal(t, 8.902816, p.Lon)
+	assert.Equal(t, 45.880394, p.Lat)
+	assert.Equal(t, 8.903013, p.Lon)
 }

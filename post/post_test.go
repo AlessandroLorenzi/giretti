@@ -49,8 +49,8 @@ func TestReadPost(t *testing.T) {
 	a.Equal("2024-02-25-my-first-post", p.ID)
 
 	a.NotNil(p.Headers.Gallery[0].Position)
-	a.Equal(45.880487, p.Headers.Gallery[0].Position.Lat)
-	a.Equal(8.902816, p.Headers.Gallery[0].Position.Lon)
+	a.Equal(45.880394, p.Headers.Gallery[0].Position.Lat)
+	a.Equal(8.903013, p.Headers.Gallery[0].Position.Lon)
 
 	a.Equal(45.880394, p.Headers.StartingPosition.Lat)
 	a.Equal(8.903013, p.Headers.StartingPosition.Lon)
@@ -63,5 +63,4 @@ func TestPositionFromHeaders(t *testing.T) {
 
 	a.Equal(1.2, p.Headers.StartingPosition.Lat)
 	a.Equal(3.4, p.Headers.StartingPosition.Lon)
-
 }
