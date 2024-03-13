@@ -1,1 +1,3 @@
 title: Example Site
+author: John Doe
+base_url: http://localhost:8080

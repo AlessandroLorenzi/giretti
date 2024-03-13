@@ -1,10 +1,10 @@
-package posts_test
+package post_test
 
 import (
 	"os"
 	"testing"
 
-	"github.com/AlessandroLorenzi/giretti/posts"
+	"github.com/AlessandroLorenzi/giretti/post"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,12 +19,13 @@ func TestPostsInit(t *testing.T) {
 
 	a := assert.New(t)
 
-	err := posts.Init(testDir)
+	err := post.InitRepo(testDir)
+	posts := post.GetAll()
 	a.Nil(err)
 
-	a.Equal(2, len(posts.Posts))
+	a.Equal(2, len(posts))
 
 	// Check that the posts are sorted by date
-	a.Equal("My first post", posts.Posts[1].Headers.Title)
-	a.Equal("Second post", posts.Posts[0].Headers.Title)
+	a.Equal("My first post", posts[1].Headers.Title)
+	a.Equal("Second post", posts[0].Headers.Title)
 }

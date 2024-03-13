@@ -5,7 +5,6 @@ import (
 
 	"github.com/AlessandroLorenzi/giretti/config"
 	"github.com/AlessandroLorenzi/giretti/post"
-	"github.com/AlessandroLorenzi/giretti/posts"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,7 +14,7 @@ type Info struct {
 }
 
 func GetPost(c *gin.Context) {
-	post := posts.GetFromUrl(c.Request.URL.Path)
+	post := post.GetFromUrl(c.Request.URL.Path)
 
 	c.HTML(http.StatusOK, "post.tmpl", Info{
 		Config: config.Config,

@@ -5,7 +5,6 @@ import (
 
 	"github.com/AlessandroLorenzi/giretti/config"
 	"github.com/AlessandroLorenzi/giretti/post"
-	"github.com/AlessandroLorenzi/giretti/posts"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +16,7 @@ type GetIndexInfo struct {
 func GetIndex(c *gin.Context) {
 	info := GetIndexInfo{
 		Config: config.Config,
-		Posts:  posts.Posts,
+		Posts:  post.GetAll(),
 	}
 	c.HTML(http.StatusOK, "index.tmpl", info)
 }

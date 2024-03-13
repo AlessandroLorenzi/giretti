@@ -7,7 +7,8 @@ import (
 	"os"
 
 	"github.com/AlessandroLorenzi/giretti/config"
-	"github.com/AlessandroLorenzi/giretti/posts"
+	"github.com/AlessandroLorenzi/giretti/post"
+	"github.com/AlessandroLorenzi/giretti/user"
 	"github.com/AlessandroLorenzi/giretti/views"
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,12 @@ func main() {
 
 	os.Chdir(getBaseDirFromArgs())
 
-	if err := posts.Init("posts"); err != nil {
+	if err := user.InitRepo(); err != nil {
+		fmt.Println("Error initializing users", err)
+		return
+	}
+
+	if err := post.InitRepo("posts"); err != nil {
 		fmt.Println("Error initializing posts", err)
 		return
 	}
@@ -31,6 +37,10 @@ func main() {
 	}
 
 	r := gin.Default()
+
+	r.ForwardedByClientIP = true
+	r.SetTrustedProxies([]string{"127.0.0.1"})
+
 	templ := template.Must(
 		template.New("").ParseFS(f, "templates/*.tmpl"),
 	)
@@ -39,6 +49,7 @@ func main() {
 	r.StaticFS("/media", gin.Dir("media", false))
 
 	r.GET("/", views.GetIndex)
+	r.GET("/@:username", views.GetUser)
 	r.GET("/:year/:month/:day/:title", views.GetPost)
 	r.Run()
 }

@@ -1,16 +1,14 @@
-package posts
+package post
 
 import (
 	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/AlessandroLorenzi/giretti/post"
 )
 
-var Posts = []*post.Post{}
+var PostsRepo = []*Post{}
 
-func Init(postsPath string) error {
+func InitRepo(postsPath string) error {
 	// list files in postsPath
 	if err := loadPosts(postsPath); err != nil {
 		return err
@@ -20,8 +18,12 @@ func Init(postsPath string) error {
 	return nil
 }
 
-func GetFromUrl(url string) *post.Post {
-	for _, p := range Posts {
+func GetAll() []*Post {
+	return PostsRepo
+}
+
+func GetFromUrl(url string) *Post {
+	for _, p := range PostsRepo {
 		if p.Url == url {
 			return p
 		}
@@ -40,21 +42,21 @@ func loadPosts(postsPath string) error {
 			continue // Skip directories
 		}
 		if filepath.Ext(f.Name()) == ".md" {
-			p, err := post.ReadPost(filepath.Join(postsPath, f.Name()))
+			p, err := ReadPost(filepath.Join(postsPath, f.Name()))
 			if err != nil {
 				return fmt.Errorf("error reading post %s: %w", f.Name(), err)
 			}
-			Posts = append(Posts, p)
+			PostsRepo = append(PostsRepo, p)
 		}
 	}
 	return nil
 }
 
 func sortPostsBydate() {
-	for i := 0; i < len(Posts); i++ {
-		for j := i + 1; j < len(Posts); j++ {
-			if Posts[i].Date.Before(Posts[j].Date) {
-				Posts[i], Posts[j] = Posts[j], Posts[i]
+	for i := 0; i < len(PostsRepo); i++ {
+		for j := i + 1; j < len(PostsRepo); j++ {
+			if PostsRepo[i].Date.Before(PostsRepo[j].Date) {
+				PostsRepo[i], PostsRepo[j] = PostsRepo[j], PostsRepo[i]
 			}
 		}
 	}

@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+
+<html lang="it">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="/media/site-screen.css" type="text/css" rel="stylesheet" media="screen" />
+
+  <title>
+    {{ .Config.Title }}
+  </title>
+
+</head>
+
+<body>
+
+  <div class="head">
+    <a href="/">{{ .Config.Title }}</a>
+  </div>
+  <div class="mainbody">
+
+    <h1>Alessandro Lorenzi</h1>
+    <p>
+     {{ len .Posts }} Posts - {{ len .User.Followers }} Followers
+    </p>
+    
+    <ul>
+    {{ range .Posts }}
+      <li>
+        <a href="{{ .Url }}">{{ .Headers.Title }}</a>
+      </li>
+    {{ end }}
+    </ul>
+
+
+  
+</body>
+
+</html>

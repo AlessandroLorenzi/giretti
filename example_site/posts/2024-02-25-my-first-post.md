@@ -12,6 +12,7 @@ gallery:
   - image: "media/posts/2024-02-25-my-first-post/DSC07957.JPG"
     thumbnail: "media/posts/2024-02-25-my-first-post/DSC07957_thumb.JPG"
     description: "This is the image description"
+author: alorenzi
 ---
 
 This is my first post
