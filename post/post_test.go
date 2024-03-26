@@ -29,38 +29,28 @@ func TestReadPost(t *testing.T) {
 	p, err := post.ReadPost("posts/2024-02-25-my-first-post.md")
 	a.NoError(err)
 
-	a.Equal("My first post", p.Headers.Title)
-	a.Equal([]string{"first", "post"}, p.Headers.Tags)
-	a.Equal([]string{"media/posts/2024-02-25-my-first-post/track.gpx"}, p.Headers.Gpx)
-	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957.JPG", *p.Headers.OpenGraph.Image)
-	a.Equal("This is the opengraph description", *p.Headers.OpenGraph.Description)
-	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957.JPG", p.Headers.Gallery[0].Image)
-	a.Equal("media/posts/2024-02-25-my-first-post/DSC07957_thumb.JPG", p.Headers.Gallery[0].Thumbnail)
-	a.Equal("This is the image description", p.Headers.Gallery[0].Description)
+	a.Equal("My first post", p.Title)
+	a.Equal([]string{"first", "post"}, p.Tags)
+	a.Equal([]string{"media/posts/2024-02-25-my-first-post/track.gpx"}, p.Gpx)
+	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG", *p.OpenGraph.Image)
+	a.Equal("This is the opengraph description", *p.OpenGraph.Description)
+	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG", p.Gallery()[0].Image)
+	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957_thumb.JPG", p.Gallery()[0].Thumbnail)
 
-	a.Equal(2024, p.Date.Year())
-	a.Equal(time.Month(2), p.Date.Month())
-	a.Equal(25, p.Date.Day())
+	a.Equal(2024, p.Date().Year())
+	a.Equal(time.Month(2), p.Date().Month())
+	a.Equal(25, p.Date().Day())
 
-	a.Equal("/2024/02/25/my-first-post.html", p.Url)
+	a.Equal("/2024/02/25/my-first-post.html", p.Url())
 
 	a.Equal(template.HTML("<p>This is my first post</p>\n"), p.HTML)
 
-	a.Equal("2024-02-25-my-first-post", p.ID)
+	a.Equal("2024-02-25-my-first-post", p.Id())
 
-	a.NotNil(p.Headers.Gallery[0].Position)
-	a.Equal(45.880394, p.Headers.Gallery[0].Position.Lat)
-	a.Equal(8.903013, p.Headers.Gallery[0].Position.Lon)
+	a.NotNil(p.Gallery()[0].Position)
+	a.Equal(45.880394, p.Gallery()[0].Position.Lat)
+	a.Equal(8.903013, p.Gallery()[0].Position.Lon)
 
-	a.Equal(45.880394, p.Headers.StartingPosition.Lat)
-	a.Equal(8.903013, p.Headers.StartingPosition.Lon)
-}
-
-func TestPositionFromHeaders(t *testing.T) {
-	a := assert.New(t)
-
-	p, _ := post.ReadPost("posts/2024-03-05-second-post.md")
-
-	a.Equal(1.2, p.Headers.StartingPosition.Lat)
-	a.Equal(3.4, p.Headers.StartingPosition.Lon)
+	a.Equal(45.880394, p.StartingPosition().Lat)
+	a.Equal(8.903013, p.StartingPosition().Lon)
 }

@@ -26,6 +26,6 @@ func TestPostsInit(t *testing.T) {
 	a.Equal(2, len(posts))
 
 	// Check that the posts are sorted by date
-	a.Equal("My first post", posts[1].Headers.Title)
-	a.Equal("Second post", posts[0].Headers.Title)
+	a.Equal("My first post", posts[1].Title)
+	a.Equal("Second post", posts[0].Title)
 }

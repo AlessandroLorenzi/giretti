@@ -24,7 +24,7 @@ func GetAll() []*Post {
 
 func GetFromUrl(url string) *Post {
 	for _, p := range PostsRepo {
-		if p.Url == url {
+		if p.Url() == url {
 			return p
 		}
 	}
@@ -55,7 +55,7 @@ func loadPosts(postsPath string) error {
 func sortPostsBydate() {
 	for i := 0; i < len(PostsRepo); i++ {
 		for j := i + 1; j < len(PostsRepo); j++ {
-			if PostsRepo[i].Date.Before(PostsRepo[j].Date) {
+			if PostsRepo[i].Date().Before(PostsRepo[j].Date()) {
 				PostsRepo[i], PostsRepo[j] = PostsRepo[j], PostsRepo[i]
 			}
 		}

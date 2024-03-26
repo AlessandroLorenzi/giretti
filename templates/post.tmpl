@@ -7,9 +7,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="description" content="{{ .Post.Headers.OpenGraph.Description }}" />
+  <meta name="description" content="{{ .Post.OpenGraph.Description }}" />
   <title>
-     {{ .Post.Headers.Title }} | {{ .Config.Title }}
+     {{ .Post.Title }} | {{ .Config.Title }}
   </title>
 
   <link href="/media/site-screen.css" type="text/css" rel="stylesheet" media="screen" />
@@ -33,12 +33,12 @@
 
   <!-- OpenGraph Meta Tags -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content=" {{ .Post.Headers.Title }} | {{ .Config.Title }}">
-  {{- if .Post.Headers.OpenGraph.Description }}
-  <meta property="og:description" content="{{ .Post.Headers.OpenGraph.Description }}">
+  <meta property="og:title" content=" {{ .Post.Title }} | {{ .Config.Title }}">
+  {{- if .Post.OpenGraph.Description }}
+  <meta property="og:description" content="{{ .Post.OpenGraph.Description }}">
   {{- end }}
-  {{- if .Post.Headers.OpenGraph.Image }}
-  <meta property="og:image" content="{{ .Post.Headers.OpenGraph.Image }}">
+  {{- if .Post.OpenGraph.Image }}
+  <meta property="og:image" content="{{ .Post.OpenGraph.Image }}">
   {{- end }}
   <!-- End OpenGraph Meta Tags -->
 
@@ -87,11 +87,11 @@
   </div>
   <div class="mainbody">
 
-    <h1>{{ .Post.Headers.Title }}</h1>
-    {{ if gt (len .Post.Headers.Gpx) 0 }}
+    <h1>{{ .Post.Title }}</h1>
+    {{ if gt (len .Post.Gpx) 0 }}
       <div id="map" style="width: 100%; height: 50em"></div>
       <script>
-        {{ range .Post.Headers.Gpx }}
+        {{ range .Post.Gpx }}
           map = post_draw_map('/{{ . }}');
         {{ end }}
       </script>
@@ -109,15 +109,14 @@
       {{ .Post.HTML }}
     </div>
 
-    {{ if gt (len .Post.Headers.Gallery) 0 }}
+    {{ if gt (len .Post.Gallery) 0 }}
     <h2>Gallery</h2>
     <div class="gallery">
-      {{ range .Post.Headers.Gallery }}
+      {{ range .Post.Gallery }}
       <a data-fslightbox href="/{{ .Image }}">
         <img 
           src="/{{ .Thumbnail }}"
           id="{{ .Thumbnail }}"
-          alt="{{ .Description }}"
           style="width: 150px; height: 150px; object-fit: cover;"
         />
       </a>
@@ -125,7 +124,7 @@
     </div>
     <script>
     var photos = [];
-    {{ range $i, $_ := .Post.Headers.Gallery }}
+    {{ range $i, $_ := .Post.Gallery }}
       photos.push({
         url: '/{{ .Image }}',
         thumbnail: '/{{ .Thumbnail }}',

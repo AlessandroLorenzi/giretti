@@ -33,13 +33,13 @@
 
     var markers = [];    
     {{ range .Posts }}
-      {{- if .Headers.StartingPosition -}}
+      {{- if .StartingPosition -}}
         marker_coordinates = [
-          {{ .Headers.StartingPosition.Lat }},
-          {{ .Headers.StartingPosition.Lon }}
+          {{ .StartingPosition.Lat }},
+          {{ .StartingPosition.Lon }}
         ];
         marker = L.marker(marker_coordinates);
-        marker.bindPopup("<a href='{{ .Url }}'><strong>{{ .Headers.Title }}</strong></a>");
+        marker.bindPopup("<a href='{{ .Url }}'><strong>{{ .Title }}</strong></a>");
         marker.addTo(map);
         markers = markers.concat([marker_coordinates]);
       {{- end -}}
@@ -55,7 +55,7 @@
       {{ range .Posts }}
       <li>
         {{ .Date.Format "02/01/2006" }} -
-        <a href="{{ .Url }}">{{ .Headers.Title }}</a>
+        <a href="{{ .Url }}">{{ .Title }}</a>
       </li>
       {{ end }}
       

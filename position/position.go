@@ -19,7 +19,7 @@ type positionAtTime struct {
 	time     time.Time
 }
 
-func GetImagePosition(path string, gpxPath string) (*Position, error) {
+func ImagePosition(path string, gpxPath string) (*Position, error) {
 	shootingTime, err := getShootingTime(path)
 	if err != nil {
 		return nil, err
