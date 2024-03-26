@@ -11,6 +11,7 @@ import (
 
 	"github.com/AlessandroLorenzi/giretti/position"
 	"github.com/adrg/frontmatter"
+	"github.com/disintegration/imaging"
 	"github.com/gomarkdown/markdown"
 )
 
@@ -140,19 +141,17 @@ func (p *Post) Gallery() []*GalleryItem {
 		fmt.Printf("Error reading media dir: %v\n", err)
 		return gallery
 	}
-	fmt.Println("galleryPath", galleryPath)
-	fmt.Println("files", files)
 	for _, file := range files {
 
 		if strings.Contains(file.Name(), "_thumb.JPG") {
 			continue
 		}
 
-		fmt.Println("fullFileName", file.Name())
 		if filepath.Ext(file.Name()) == ".JPG" {
 			fullFileName := fmt.Sprintf("%s/%s", galleryPath, file.Name())
-
 			thumbnail := strings.TrimSuffix(fullFileName, ".JPG") + "_thumb.JPG"
+
+			genThumbIfNeeded(fullFileName, thumbnail)
 
 			pos, err := position.ImagePosition(fullFileName, p.Gpx[0])
 			if err != nil {
@@ -168,6 +167,16 @@ func (p *Post) Gallery() []*GalleryItem {
 		}
 	}
 	return gallery
+}
+
+func genThumbIfNeeded(fileName, thumbnail string) {
+	_, err := os.Stat(thumbnail)
+	if !os.IsNotExist(err) {
+		return
+	}
+	src, _ := imaging.Open(fileName, imaging.AutoOrientation(true))
+	dst := imaging.Fit(src, 800, 600, imaging.Lanczos)
+	imaging.Save(dst, thumbnail)
 }
 
 func (p *Post) StartingPosition() *position.Position {
