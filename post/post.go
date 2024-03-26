@@ -153,10 +153,14 @@ func (p *Post) Gallery() []*GalleryItem {
 
 			genThumbIfNeeded(fullFileName, thumbnail)
 
-			pos, err := position.ImagePosition(fullFileName, p.Gpx[0])
-			if err != nil {
-				fmt.Printf("Error getting image position: %s %v", fullFileName, err)
-				continue
+			pos := &position.Position{}
+
+			if len(p.Gpx) > 0 {
+				pos, err = position.ImagePosition(fullFileName, p.Gpx[0])
+				if err != nil {
+					fmt.Printf("Error getting image position: %s %v", fullFileName, err)
+					continue
+				}
 			}
 
 			gallery = append(gallery, &GalleryItem{
