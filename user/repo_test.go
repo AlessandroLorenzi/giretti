@@ -14,7 +14,6 @@ func TestGetByUsername(t *testing.T) {
 
 	err := user.InitRepo()
 	a.NoError(err)
-
 	users := user.GetAll()
 
 	a.Equal(1, len(users))
