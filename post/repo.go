@@ -4,39 +4,42 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-var PostsRepo = []*Post{}
+var db *gorm.DB
 
 func InitRepo(postsPath string) error {
-	// list files in postsPath
-	if err := loadPosts(postsPath); err != nil {
-		return err
+	var err error
+	db, err = gorm.Open(sqlite.Open("mydatabase.db"), &gorm.Config{})
+	if err != nil {
+		panic("Failed to connect to database")
 	}
-	sortPostsBydate()
+	db.AutoMigrate(&Post{})
 
-	return nil
+	return loadPostsFromDb(postsPath)
 }
 
 func GetAll() []*Post {
-	return PostsRepo
+	var posts []*Post
+	db.Order("date desc").Find(&posts)
+	return posts
 }
 
-func GetFromUrl(url string) *Post {
-	for _, p := range PostsRepo {
-		if p.Url() == url {
-			return p
-		}
-	}
-	return nil
+func Get(id string) *Post {
+	var post Post
+	db.Where("id = ?", id).First(&post)
+	return &post
 }
 
-func loadPosts(postsPath string) error {
+func loadPostsFromDb(postsPath string) error {
 	files, err := os.ReadDir(postsPath)
 	if err != nil {
 		return fmt.Errorf("error reading posts directory: %w", err)
 	}
-	// for each file, read the post and append it to Posts
+
 	for _, f := range files {
 		if f.IsDir() {
 			continue // Skip directories
@@ -46,18 +49,11 @@ func loadPosts(postsPath string) error {
 			if err != nil {
 				return fmt.Errorf("error reading post %s: %w", f.Name(), err)
 			}
-			PostsRepo = append(PostsRepo, p)
-		}
-	}
-	return nil
-}
 
-func sortPostsBydate() {
-	for i := 0; i < len(PostsRepo); i++ {
-		for j := i + 1; j < len(PostsRepo); j++ {
-			if PostsRepo[i].Date().Before(PostsRepo[j].Date()) {
-				PostsRepo[i], PostsRepo[j] = PostsRepo[j], PostsRepo[i]
+			if db.Where("id = ?", p.Id).First(&Post{}).RowsAffected == 0 {
+				db.Create(p)
 			}
 		}
 	}
+	return nil
 }

@@ -7,7 +7,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="description" content="{{ .Post.OpenGraph.Description }}" />
+  <meta name="description" content="{{ .Post.OpenGraphDescription }}" />
   <title>
      {{ .Post.Title }} | {{ .Config.Title }}
   </title>
@@ -34,11 +34,11 @@
   <!-- OpenGraph Meta Tags -->
   <meta property="og:type" content="website">
   <meta property="og:title" content=" {{ .Post.Title }} | {{ .Config.Title }}">
-  {{- if .Post.OpenGraph.Description }}
-  <meta property="og:description" content="{{ .Post.OpenGraph.Description }}">
+  {{- if .Post.OpenGraphDescription }}
+  <meta property="og:description" content="{{ .Post.OpenGraphDescription }}">
   {{- end }}
-  {{- if .Post.OpenGraph.Image }}
-  <meta property="og:image" content="{{ .Post.OpenGraph.Image }}">
+  {{- if .Post.OpenGraphImage }}
+  <meta property="og:image" content="{{ .Post.OpenGraphImage }}">
   {{- end }}
   <!-- End OpenGraph Meta Tags -->
 

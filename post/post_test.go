@@ -32,8 +32,8 @@ func TestReadPost(t *testing.T) {
 	a.Equal("My first post", p.Title)
 	a.Equal([]string{"first", "post"}, p.Tags)
 	a.Equal([]string{"media/posts/2024-02-25-my-first-post/track.gpx"}, p.Gpx)
-	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG", *p.OpenGraph.Image)
-	a.Equal("This is the opengraph description", *p.OpenGraph.Description)
+	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG", *p.OpenGraphImage)
+	a.Equal("This is the opengraph description", *p.OpenGraphDescription)
 	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG", p.Gallery()[0].Image)
 	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957_thumb.JPG", p.Gallery()[0].Thumbnail)
 
@@ -45,7 +45,7 @@ func TestReadPost(t *testing.T) {
 
 	a.Equal(template.HTML("<p>This is my first post</p>\n"), p.HTML)
 
-	a.Equal("2024-02-25-my-first-post", p.Id())
+	a.Equal("2024-02-25-my-first-post", p.Id)
 
 	a.NotNil(p.Gallery()[0].Position)
 	a.Equal(45.880394, p.Gallery()[0].Position.Lat)

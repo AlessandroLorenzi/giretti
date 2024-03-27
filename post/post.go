@@ -13,6 +13,7 @@ import (
 	"github.com/adrg/frontmatter"
 	"github.com/disintegration/imaging"
 	"github.com/gomarkdown/markdown"
+	"github.com/lib/pq"
 )
 
 type PostHeaders struct {
@@ -20,21 +21,20 @@ type PostHeaders struct {
 	Tags      []string `yaml:"tags"`
 	Gpx       []string `yaml:"gpx"`
 	OpenGraph struct {
-		Image       *string `yaml:"image"`
-		Description *string `yaml:"description"`
+		Image       *string
+		Description *string
 	} `yaml:"open_graph"`
 }
 
 type Post struct {
-	Title     string
-	Path      string
-	Tags      []string
-	Gpx       []string
-	OpenGraph struct {
-		Image       *string `yaml:"image"`
-		Description *string `yaml:"description"`
-	}
-	HTML template.HTML
+	Id                   string `gorm:"primaryKey"`
+	Title                string
+	Date                 time.Time
+	Tags                 pq.StringArray `gorm:"type:text[]"`
+	Gpx                  pq.StringArray `gorm:"type:text[]"`
+	OpenGraphImage       *string
+	OpenGraphDescription *string
+	HTML                 template.HTML
 }
 
 type GalleryItem struct {
@@ -59,35 +59,28 @@ func ReadPost(path string) (*Post, error) {
 
 	html := markdown.ToHTML(rest, nil, nil)
 
+	id := strings.TrimSuffix(
+		filepath.Base(path),
+		filepath.Ext(path),
+	)
+
 	p := &Post{
-		Title: headers.Title,
-		Path:  path,
-		Tags:  headers.Tags,
-		Gpx:   headers.Gpx,
-		OpenGraph: struct {
-			Image       *string `yaml:"image"`
-			Description *string `yaml:"description"`
-		}{
-			Image:       headers.OpenGraph.Image,
-			Description: headers.OpenGraph.Description,
-		},
-		HTML: template.HTML(string(html)),
+		Id:                   id,
+		Title:                headers.Title,
+		Date:                 postDate(id),
+		Tags:                 headers.Tags,
+		Gpx:                  headers.Gpx,
+		OpenGraphImage:       headers.OpenGraph.Image,
+		OpenGraphDescription: headers.OpenGraph.Description,
+		HTML:                 template.HTML(string(html)),
 	}
 
 	return p, nil
 }
 
-func (p *Post) Id() string {
-	return strings.TrimSuffix(
-		filepath.Base(p.Path),
-		filepath.Ext(p.Path),
-	)
-}
-
 func (p *Post) Url() string {
-	base := filepath.Base(p.Path)
 	// Split the input string by underscores
-	components := strings.Split(base, "-")
+	components := strings.Split(p.Id, "-")
 
 	// Extract year, month, and day
 	year := components[0]
@@ -101,10 +94,8 @@ func (p *Post) Url() string {
 	return fmt.Sprintf("/%s/%s/%s/%s.html", year, month, day, htmlName)
 }
 
-func (p *Post) Date() time.Time {
-	base := filepath.Base(p.Path)
-	// Split the input string by underscores
-	components := strings.Split(base, "-")
+func postDate(id string) time.Time {
+	components := strings.Split(id, "-")
 
 	// Convert string components to integers
 	year, err := strconv.Atoi(components[0])
@@ -130,12 +121,12 @@ func (p *Post) Date() time.Time {
 }
 
 func (p *Post) MediaDir() string {
-	return "media/posts/" + p.Id() + "/"
+	return "media/posts/" + p.Id + "/"
 }
 
 func (p *Post) Gallery() []*GalleryItem {
 	gallery := []*GalleryItem{}
-	galleryPath := fmt.Sprintf("media/post/%s/gallery", p.Id())
+	galleryPath := fmt.Sprintf("media/post/%s/gallery", p.Id)
 	files, err := os.ReadDir(galleryPath)
 	if err != nil {
 		fmt.Printf("Error reading media dir: %v\n", err)
