@@ -121,7 +121,7 @@ func postDate(id string) time.Time {
 }
 
 func (p *Post) MediaDir() string {
-	return "media/posts/" + p.Id + "/"
+	return "media/post/" + p.Id + "/"
 }
 
 func (p *Post) Gallery() []*GalleryItem {

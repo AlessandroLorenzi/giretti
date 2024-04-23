@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/AlessandroLorenzi/giretti/post"
+	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,16 +31,16 @@ func TestReadPost(t *testing.T) {
 	a.NoError(err)
 
 	a.Equal("My first post", p.Title)
-	a.Equal([]string{"first", "post"}, p.Tags)
-	a.Equal([]string{"media/posts/2024-02-25-my-first-post/track.gpx"}, p.Gpx)
-	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG", *p.OpenGraphImage)
+	a.Equal(pq.StringArray{"first", "post"}, p.Tags)
+	a.Equal(pq.StringArray{"media/post/2024-02-25-my-first-post/track.gpx"}, p.Gpx)
+	a.Equal("media/post/2024-02-25-my-first-post/gallery/DSC07957.JPG", *p.OpenGraphImage)
 	a.Equal("This is the opengraph description", *p.OpenGraphDescription)
-	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG", p.Gallery()[0].Image)
-	a.Equal("media/posts/2024-02-25-my-first-post/gallery/DSC07957_thumb.JPG", p.Gallery()[0].Thumbnail)
+	a.Equal("media/post/2024-02-25-my-first-post/gallery/DSC07957.JPG", p.Gallery()[0].Image)
+	a.Equal("media/post/2024-02-25-my-first-post/gallery/DSC07957_thumb.JPG", p.Gallery()[0].Thumbnail)
 
-	a.Equal(2024, p.Date().Year())
-	a.Equal(time.Month(2), p.Date().Month())
-	a.Equal(25, p.Date().Day())
+	a.Equal(2024, p.Date.Year())
+	a.Equal(time.Month(2), p.Date.Month())
+	a.Equal(25, p.Date.Day())
 
 	a.Equal("/2024/02/25/my-first-post.html", p.Url())
 

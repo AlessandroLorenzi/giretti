@@ -8,8 +8,8 @@ import (
 )
 
 func TestGetImagePosition(t *testing.T) {
-	gpxPath := "../example_site/media/posts/2024-02-25-my-first-post/track.gpx"
-	path := "../example_site/media/posts/2024-02-25-my-first-post/gallery/DSC07957.JPG"
+	gpxPath := "../example_site/media/post/2024-02-25-my-first-post/track.gpx"
+	path := "../example_site/media/post/2024-02-25-my-first-post/gallery/DSC07957.JPG"
 
 	a := assert.New(t)
 	p, err := position.ImagePosition(path, gpxPath)
