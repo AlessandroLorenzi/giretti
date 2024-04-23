@@ -51,6 +51,7 @@ func main() {
 	r.GET("/", views.GetIndex)
 	r.GET("/@:username", views.GetUser)
 	r.GET("/:year/:month/:day/:title", views.GetPost)
+	r.GET(".well-known/webfinger", views.GetWebFinger)
 	r.Run()
 }
 
