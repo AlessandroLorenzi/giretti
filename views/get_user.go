@@ -17,6 +17,11 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
+	if c.GetHeader("Accept") == "application/activity+json" {
+		c.JSON(http.StatusOK, u.ToActivityPub())
+		return
+	}
+
 	c.HTML(http.StatusOK, "user.tmpl", map[string]interface{}{
 		"Config": config.Config,
 		"Posts":  post.GetAll(),

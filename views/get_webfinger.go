@@ -19,7 +19,7 @@ func GetWebFinger(c *gin.Context) {
 	wf := WebFinger{
 		Subject: "acct:alorenzi@giretti.alorenzi.eu",
 		Aliases: []string{
-			"http://localhost:8080/@alorenzi",
+			"https://giretti.alorenzi.eu/@alorenzi",
 		},
 		Links: []Link{
 			{
