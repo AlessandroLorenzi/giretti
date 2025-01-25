@@ -8,7 +8,6 @@ import (
 
 	"github.com/AlessandroLorenzi/giretti/config"
 	"github.com/AlessandroLorenzi/giretti/post"
-	"github.com/AlessandroLorenzi/giretti/user"
 	"github.com/AlessandroLorenzi/giretti/views"
 	"github.com/gin-gonic/gin"
 )
@@ -20,11 +19,6 @@ func main() {
 	fmt.Println("Giretti")
 
 	os.Chdir(getBaseDirFromArgs())
-
-	if err := user.InitRepo(); err != nil {
-		fmt.Println("Error initializing users", err)
-		return
-	}
 
 	if err := post.InitRepo("posts"); err != nil {
 		fmt.Println("Error initializing posts", err)
@@ -49,9 +43,7 @@ func main() {
 	r.StaticFS("/media", gin.Dir("media", false))
 
 	r.GET("/", views.GetIndex)
-	r.GET("/@:username", views.GetUser)
 	r.GET("/:year/:month/:day/:title", views.GetPost)
-	r.GET(".well-known/webfinger", views.GetWebFinger)
 	r.Run()
 }
 
